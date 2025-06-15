@@ -1,6 +1,6 @@
 # 📊 Sorting Visualizer
 
-An interactive web application that visualizes how various sorting algorithms work using animated bars. Built using **HTML**, **CSS**, and **JavaScript**, this tool helps users understand the logic and behavior of different sorting techniques in a visual and engaging way.
+An interactive web application that visualizes how various sorting algorithms work using animated bars. Built using **HTML**, **CSS**, and **JavaScript**, this tool helps users visually and engagingly understand the logic and behavior of different sorting techniques.
 
 ---
 
@@ -29,7 +29,8 @@ An interactive web application that visualizes how various sorting algorithms wo
 - ✅ **Bubble Sort**
 - ✅ **Selection Sort**
 - ✅ **Insertion Sort**
-- *(Easily extendable to Quick Sort, Merge Sort, etc.)*
+- ✅ **Quick Sort**
+- ✅ **Merge Sort**
 
 ---
 
