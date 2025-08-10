@@ -29,7 +29,9 @@ An interactive web application that visualizes how various sorting algorithms wo
 - ✅ **Bubble Sort**
 - ✅ **Selection Sort**
 - ✅ **Insertion Sort**
-- *(Easily extendable to Quick Sort, Merge Sort, etc.)*
+- ✅ **Quick Sort**
+- ✅ **Merge Sort**
+
 
 ---
 
@@ -38,17 +40,11 @@ An interactive web application that visualizes how various sorting algorithms wo
 - Bars are represented as `<div>` elements with dynamic heights.
 - When a sorting algorithm is selected:
   - Bars are highlighted using colors:  
-    - 🔴 Red: comparing  
-    - 🟢 Green: sorted  
+    - 🔴 Red and Yelow: comparing  
+    - 🟢 Dark Green: sorted  
     - 🟦 Turquoise: default
   - Swaps are animated using height exchanges with `setTimeout()` and `async/await`.
 
----
 
-## 👨‍💻 Author
-
-**Akarsh Hegde**
-
----
 
 
