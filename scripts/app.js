@@ -1,4 +1,15 @@
 "use strict";
+
+/**
+ * app.js
+ * - Maintains window.currentList as canonical array
+ * - Renders bars directly into .array so existing CSS layout works
+ * - Shows number inside each bar
+ */
+
+let currentList = [];
+window.currentList = currentList; // global reference used by sort algorithms
+
 const start = async () => {
   let algoValue = Number(document.querySelector(".algo-menu").value);
   let speedValue = Number(document.querySelector(".speed-menu").value);
@@ -20,24 +31,43 @@ const start = async () => {
 };
 
 const RenderScreen = async () => {
-  let algoValue = Number(document.querySelector(".algo-menu").value);
   await RenderList();
 };
 
 const RenderList = async () => {
-  let sizeValue = Number(document.querySelector(".size-menu").value);
+  let sizeValue = Number(document.querySelector(".size-menu").value || 10);
   await clearScreen();
 
-  let list = await randomList(sizeValue);
+  currentList = await randomList(sizeValue);
+  window.currentList = currentList;
+  renderFromArray(currentList);
+};
+
+const renderFromArray = (list) => {
   const arrayNode = document.querySelector(".array");
-  console.log(arrayNode);
-  console.log(list);
+  if (!arrayNode) return;
+  arrayNode.innerHTML = "";
+
+  // Append bars directly into .array so CSS flex works as before
   for (const element of list) {
-    const node = document.createElement("div");
-    node.className = "cell";
-    node.setAttribute("value", String(element));
-    node.style.height = `${3.8 * element}px`;
-    arrayNode.appendChild(node);
+    const dnode = document.createElement("div");
+    dnode.className = "cell";
+    dnode.setAttribute("data-value", String(element));
+    dnode.style.height = `${3.8 * element}px`;
+
+    // show number inside bar
+    dnode.innerText = element;
+
+    // ensure number is positioned well inside the bar
+    dnode.style.display = "flex";
+    dnode.style.alignItems = "flex-end"; // number at bottom
+    dnode.style.justifyContent = "center";
+    dnode.style.paddingBottom = "6px";
+    dnode.style.color = "white";
+    dnode.style.fontSize = "12px";
+    dnode.style.fontWeight = "700";
+
+    arrayNode.appendChild(dnode);
   }
 };
 
@@ -49,20 +79,12 @@ const RenderArray = async (sorted) => {
   if (sorted) list.sort((a, b) => a - b);
 
   const arrayNode = document.querySelector(".array");
-  const divnode = document.createElement("div");
-  divnode.className = "s-array";
-
-  for (const element of list) {
-    const dnode = document.createElement("div");
-    dnode.className = "s-cell";
-    dnode.innerText = element;
-    divnode.appendChild(dnode);
-  }
-  arrayNode.appendChild(divnode);
+  // simple fallback: render as bars too
+  renderFromArray(list);
 };
 
 const randomList = async (Length) => {
-  let list = new Array();
+  let list = [];
   let lowerBound = 1;
   let upperBound = 100;
 
@@ -76,7 +98,8 @@ const randomList = async (Length) => {
 };
 
 const clearScreen = async () => {
-  document.querySelector(".array").innerHTML = "";
+  const node = document.querySelector(".array");
+  if (node) node.innerHTML = "";
 };
 
 const response = () => {
@@ -88,8 +111,11 @@ const response = () => {
   }
 };
 
-document.querySelector(".icon").addEventListener("click", response);
-document.querySelector(".start").addEventListener("click", start);
-document.querySelector(".size-menu").addEventListener("change", RenderScreen);
-document.querySelector(".algo-menu").addEventListener("change", RenderScreen);
+document.querySelector(".icon")?.addEventListener("click", response);
+document.querySelector(".start")?.addEventListener("click", start);
+document.querySelector(".size-menu")?.addEventListener("change", RenderScreen);
+document.querySelector(".algo-menu")?.addEventListener("change", RenderScreen);
 window.onload = RenderScreen;
+
+// expose render function so algorithms can call it if needed
+window.renderFromArray = renderFromArray;
