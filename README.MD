@@ -36,7 +36,7 @@ An interactive web application that visualizes how various sorting algorithms wo
 ---
 
 ## Phase 1
-!(Phase1.png)
+![Alt text](Phase1.png)
 
 ## 🧠 How It Works
 
@@ -47,6 +47,7 @@ An interactive web application that visualizes how various sorting algorithms wo
     - 🟢 Dark Green: sorted  
     - 🟦 Turquoise: default
   - Swaps are animated using height exchanges with `setTimeout()` and `async/await`.
+
 
 
 
