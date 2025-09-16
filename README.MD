@@ -35,6 +35,9 @@ An interactive web application that visualizes how various sorting algorithms wo
 
 ---
 
+## Phase 1
+!(Phase1.png)
+
 ## 🧠 How It Works
 
 - Bars are represented as `<div>` elements with dynamic heights.
@@ -44,6 +47,7 @@ An interactive web application that visualizes how various sorting algorithms wo
     - 🟢 Dark Green: sorted  
     - 🟦 Turquoise: default
   - Swaps are animated using height exchanges with `setTimeout()` and `async/await`.
+
 
 
 
