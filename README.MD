@@ -3,6 +3,15 @@
 An interactive web application that visualizes how various sorting algorithms work using animated bars. Built using **HTML**, **CSS**, and **JavaScript**, this tool helps users understand the logic and behavior of different sorting techniques in a visual and engaging way.
 
 ---
+## Phase 1
+![P1](Phase1.png)
+
+## Phase 2
+![P2](Phase2.png)
+
+## Phase 3
+![P1](Phase3.png)
+
 
 ## 🚀 Features
 
@@ -45,14 +54,7 @@ An interactive web application that visualizes how various sorting algorithms wo
   - Swaps are animated using height exchanges with `setTimeout()` and `async/await`.
 
 
-## Phase 1
-![P1](Phase1.png)
 
-## Phase 2
-![P2](Phase2.png)
-
-## Phase 3
-![P1](Phase3.png)
 
 
 
