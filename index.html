@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css">
 
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
   <link rel="stylesheet" href="./css/style.css" />
@@ -21,9 +20,10 @@
       Sorting visualizer
     </h2>
     <div class="navbar" id="navbar">
+      <a id="audio-toggle" title="Toggle Sound"><i class="fa fa-volume-up"></i></a>
       <a id="random" onclick="RenderScreen()">Generate array</a>
       <span class="options">
-        <select name="select sort algorithm" id="menu" class="algo-menu">
+        <select name="select sort algorithm" id="algo-menu" class="algo-menu">
           <option value="0">Choose algorithm</option>
           <option value="1">Bubble Sort</option>
           <option value="2">Selection Sort</option>
@@ -33,7 +33,7 @@
         </select>
       </span>
       <span class="options">
-        <select name="select array size" id="menu" class="size-menu">
+        <select name="select array size" id="size-menu" class="size-menu">
           <option value="0">Array size</option>
           <option value="5">5</option>
           <option value="10">10</option>
@@ -45,11 +45,10 @@
           <option value="60">60</option>
           <option value="70">70</option>
           <option value="80">80</option>
-
         </select>
       </span>
       <span class="options">
-        <select name="speed of visualization" id="menu" class="speed-menu">
+        <select name="speed of visualization" id="speed-menu" class="speed-menu">
           <option value="0">Speed</option>
           <option value="0.5">0.50x</option>
           <option value="0.75">0.75x</option>
@@ -58,16 +57,103 @@
           <option value="4">4.00x</option>
         </select>
       </span>
+      <a id="pause-btn" class="control-btn hidden">Pause</a>
+      <a id="cancel-btn" class="control-btn hidden">Stop</a>
       <a class="start">Sort</a>
       <a class="icon"><i class="fa fa-bars"></i></a>
     </div>
   </div>
-  <div class="center">
-    <div class="array"></div>
+
+  <div class="main-layout">
+    <div class="center">
+      <div class="array"></div>
+    </div>
+    
+    <div class="dashboard">
+      <div class="tabs-container">
+        <button class="tab-btn active" data-tab="stats">Live Stats</button>
+        <button class="tab-btn" data-tab="info">Algorithm Info</button>
+        <button class="tab-btn" data-tab="code">Pseudo-code</button>
+      </div>
+      
+      <!-- Live Stats Tab -->
+      <div class="tab-content" id="tab-stats">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Comparisons</span>
+            <span class="stat-value" id="stat-comparisons">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Swaps & Writes</span>
+            <span class="stat-value" id="stat-swaps">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Array Accesses</span>
+            <span class="stat-value" id="stat-accesses">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Elapsed Time</span>
+            <span class="stat-value" id="stat-time">0.0s</span>
+          </div>
+        </div>
+        
+        <div class="custom-input-container">
+          <span class="custom-input-title">Custom Array Input</span>
+          <div class="custom-input-row">
+            <input type="text" id="custom-array-val" placeholder="e.g. 12, 45, 30, 90, 5, 66" />
+            <button id="custom-array-btn">Load</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Info Tab -->
+      <div class="tab-content hidden" id="tab-info">
+        <div class="info-section">
+          <h3 class="info-title" id="info-algo-name">Select an Algorithm</h3>
+          <table class="complexity-table">
+            <thead>
+              <tr>
+                <th>Complexity</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Best Time</td>
+                <td><span class="complexity-badge best" id="info-best-time">-</span></td>
+              </tr>
+              <tr>
+                <td>Average Time</td>
+                <td><span class="complexity-badge avg" id="info-avg-time">-</span></td>
+              </tr>
+              <tr>
+                <td>Worst Time</td>
+                <td><span class="complexity-badge worst" id="info-worst-time">-</span></td>
+              </tr>
+              <tr>
+                <td>Space Complexity</td>
+                <td><span class="complexity-badge space" id="info-space-comp">-</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="info-description" id="info-algo-desc">
+            Choose a sorting algorithm from the dropdown to see its time and space complexity details, implementation logic, and pseudo-code.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Pseudo-code Tab -->
+      <div class="tab-content hidden" id="tab-code">
+        <div class="code-container">
+          <pre><code id="code-block">Select an algorithm to view pseudo-code.</code></pre>
+        </div>
+      </div>
+    </div>
   </div>
+
   <footer class="footer">
     <p>
-       Choose Array Size , Algorithm and Start Sorting
+       Choose Array Size, Algorithm and Start Sorting
     </p>
   </footer>
   <script src="./scripts/app.js"></script>

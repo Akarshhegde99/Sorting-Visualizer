@@ -4,7 +4,16 @@ class sortAlgorithms {
     this.delay = Math.max(10, Math.floor(1000 / this.speed));
   }
 
-  sleep(ms) {
+  async sleep(ms) {
+    if (window.isCancelled) {
+      throw new Error("SORT_CANCELLED");
+    }
+    while (window.isPaused) {
+      if (window.isCancelled) {
+        throw new Error("SORT_CANCELLED");
+      }
+      await new Promise((res) => setTimeout(res, 100));
+    }
     return new Promise((res) => setTimeout(res, ms));
   }
 
@@ -17,7 +26,11 @@ class sortAlgorithms {
     const bars = this.getBars();
     if (!bars[i]) return;
     bars[i].style.height = `${3.8 * value}px`;
-    bars[i].innerText = value;
+    if (window.currentList.length <= 25) {
+      bars[i].innerText = value;
+    } else {
+      bars[i].innerText = "";
+    }
     bars[i].setAttribute("data-value", String(value));
   }
 
@@ -50,19 +63,21 @@ class sortAlgorithms {
 
   markSorted(i) {
     const bars = this.getBars();
-    if (bars[i]) bars[i].style.backgroundColor = "#4caf50";
+    if (bars[i]) bars[i].style.backgroundColor = "#10b981"; // Emerald green
   }
 
-  /* --- sorting implementations (same logic as earlier) --- */
+  /* --- sorting implementations --- */
 
   async BubbleSort() {
     const arr = window.currentList;
     const n = arr.length;
     for (let i = 0; i < n - 1; i++) {
       for (let j = 0; j < n - i - 1; j++) {
+        if (window.trackComparison) window.trackComparison(arr[j]);
         await this.highlightTemp(j, j + 1, "#ffd54f");
         await this.sleep(this.delay);
         if (arr[j] > arr[j + 1]) {
+          if (window.trackSwap) window.trackSwap(arr[j]);
           await this.swapIndices(j, j + 1);
         } else {
           this.unhighlight(j, j + 1);
@@ -80,6 +95,7 @@ class sortAlgorithms {
       let minIdx = i;
       await this.highlightTemp(minIdx, minIdx, "#ff7043");
       for (let j = i + 1; j < n; j++) {
+        if (window.trackComparison) window.trackComparison(arr[j]);
         await this.highlightTemp(minIdx, j, "#ffd54f");
         await this.sleep(this.delay);
         if (arr[j] < arr[minIdx]) {
@@ -91,6 +107,7 @@ class sortAlgorithms {
         }
       }
       if (minIdx !== i) {
+        if (window.trackSwap) window.trackSwap(arr[minIdx]);
         await this.swapIndices(i, minIdx);
       } else {
         this.unhighlight(minIdx, minIdx);
@@ -107,15 +124,22 @@ class sortAlgorithms {
       let j = i - 1;
       await this.highlightTemp(i, i, "#ff7043");
       await this.sleep(this.delay);
-      while (j >= 0 && arr[j] > key) {
-        arr[j + 1] = arr[j];
-        this.updateBar(j + 1, arr[j + 1]);
-        await this.highlightTemp(j, j + 1, "#ffd54f");
-        await this.sleep(this.delay);
-        this.unhighlight(j, j + 1);
-        j = j - 1;
+      while (j >= 0) {
+        if (window.trackComparison) window.trackComparison(arr[j]);
+        if (arr[j] > key) {
+          arr[j + 1] = arr[j];
+          if (window.trackWrite) window.trackWrite(arr[j]);
+          this.updateBar(j + 1, arr[j + 1]);
+          await this.highlightTemp(j, j + 1, "#ffd54f");
+          await this.sleep(this.delay);
+          this.unhighlight(j, j + 1);
+          j = j - 1;
+        } else {
+          break;
+        }
       }
       arr[j + 1] = key;
+      if (window.trackWrite) window.trackWrite(key);
       this.updateBar(j + 1, arr[j + 1]);
       this.unhighlight(i, i);
       await this.sleep(this.delay);
@@ -143,12 +167,14 @@ class sortAlgorithms {
     const right = arr.slice(mid + 1, r + 1);
     let i = 0, j = 0, k = l;
     while (i < left.length && j < right.length) {
+      if (window.trackComparison) window.trackComparison(left[i]);
       await this.highlightTemp(k, k, "#ffd54f");
       if (left[i] <= right[j]) {
         arr[k] = left[i++];
       } else {
         arr[k] = right[j++];
       }
+      if (window.trackWrite) window.trackWrite(arr[k]);
       this.updateBar(k, arr[k]);
       await this.sleep(this.delay);
       this.unhighlight(k, k);
@@ -156,12 +182,14 @@ class sortAlgorithms {
     }
     while (i < left.length) {
       arr[k] = left[i++];
+      if (window.trackWrite) window.trackWrite(arr[k]);
       this.updateBar(k, arr[k]);
       await this.sleep(this.delay);
       k++;
     }
     while (j < right.length) {
       arr[k] = right[j++];
+      if (window.trackWrite) window.trackWrite(arr[k]);
       this.updateBar(k, arr[k]);
       await this.sleep(this.delay);
       k++;
@@ -188,19 +216,24 @@ class sortAlgorithms {
     let i = low - 1;
     await this.highlightTemp(high, high, "#ff7043");
     for (let j = low; j < high; j++) {
+      if (window.trackComparison) window.trackComparison(arr[j]);
       await this.highlightTemp(j, high, "#ffd54f");
       await this.sleep(this.delay);
       if (arr[j] < pivot) {
         i++;
+        if (window.trackSwap) window.trackSwap(arr[i]);
         await this.swapIndices(i, j);
       } else {
         this.unhighlight(j, high);
       }
     }
+    if (window.trackSwap) window.trackSwap(arr[i + 1]);
     await this.swapIndices(i + 1, high);
     this.unhighlight(high, high);
     return i + 1;
   }
 }
+
+window.sortAlgorithms = sortAlgorithms;
 
 window.sortAlgorithms = sortAlgorithms;
